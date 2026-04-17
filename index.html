@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Эль-Гамаль</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Шифр Эль-Гамаля</h1>
+
+    <div class="block">
+        <label>p (простое число):</label>
+        <input id="p" type="number">
+    </div>
+
+    <div class="block">
+        <button id="findRootsBtn">Найти первообразные корни</button>
+    </div>
+
+    <div class="block">
+        <label>g:</label>
+        <select id="g"></select>
+    </div>
+
+    <div class="block">
+        <label>x (секретный ключ):</label>
+        <input id="x" type="number">
+    </div>
+
+    <div class="block">
+        <label>k (случайное число):</label>
+        <input id="k" type="number">
+    </div>
+
+    <div class="block">
+        <input type="file" id="fileInput">
+    </div>
+
+    <div class="buttons">
+        <button id="encryptBtn">Зашифровать</button>
+        <button id="decryptBtn">Расшифровать</button>
+    </div>
+
+    <h3>Вывод:</h3>
+    <textarea id="output" readonly></textarea>
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>
