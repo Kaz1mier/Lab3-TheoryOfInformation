@@ -11,39 +11,37 @@
     <h1>Шифр Эль-Гамаля</h1>
 
     <div class="block">
-        <label>p (простое число):</label>
-        <input id="p" type="number">
+        <label>p (простое, >255):</label>
+        <label for="p"></label><input id="p" type="number">
     </div>
 
     <div class="block">
         <button id="findRootsBtn">Найти первообразные корни</button>
+        <span id="rootsCount" style="margin-left: 10px; font-weight: bold; color: #4CAF50;"></span>
     </div>
 
     <div class="block">
         <label>g:</label>
-        <select id="g"></select>
+        <label for="g"></label><select id="g"></select>
     </div>
 
     <div class="block">
-        <label>x (секретный ключ):</label>
-        <input id="x" type="number">
+        <label>x (1 < x < p-1):</label>
+        <label for="x"></label><input id="x" type="number">
     </div>
 
     <div class="block">
-        <label>k (случайное число):</label>
-        <input id="k" type="number">
+        <label>k (НОД(k, p-1)=1):</label>
+        <label for="k"></label><input id="k" type="number">
     </div>
 
-    <div class="block">
-        <input type="file" id="fileInput">
-    </div>
+    <input type="file" id="fileInput">
 
     <div class="buttons">
         <button id="encryptBtn">Зашифровать</button>
         <button id="decryptBtn">Расшифровать</button>
     </div>
 
-    <h3>Вывод:</h3>
     <textarea id="output" readonly></textarea>
 </div>
 
