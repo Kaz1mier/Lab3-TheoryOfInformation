@@ -135,8 +135,7 @@ function processFile(isEncrypt) {
                 y=${y}
                 Количество первообразных корней: ${currentRoots.length}
                 Зашифрованные данные (пары a, b):
-                ${text}\`;
-                `;
+                ${text.slice(0, 1000)}...`;
             await saveFile(new Blob([text]), "enc_" + file.name);
         } else {
             let textReader = new FileReader();
