@@ -79,21 +79,24 @@ async function saveFile(blob, name) {
 
 let currentRoots = [];
 
-function validate(p, g, x, k) {
+function validate(p, g, x, k, isEncrypt) {
     if (!isPrime(p)) return "p должно быть простым";
     if (p <= 255n) return "p должно быть > 255";
 
     if (x <= 1n || x >= p - 1n)
         return "x должно быть: 1 < x < p-1";
 
-    if (gcd(k, p - 1n) !== 1n)
-        return "k должно быть взаимно простым с p-1";
-
     if (!currentRoots.includes(g))
         return "g не является первообразным корнем";
-
+    if (isEncrypt) {
+        if (gcd(k, p - 1n) !== 1n)
+            return "k должно быть взаимно простым с p-1";
+        if (k <= 1n || k >= p - 1n)
+            return "k должно быть: 1 < k < p-1";
+    }
     return null;
 }
+
 
 function processFile(isEncrypt) {
     let file = document.getElementById('fileInput').files[0];
@@ -102,65 +105,68 @@ function processFile(isEncrypt) {
     let p = BigInt(document.getElementById('p').value);
     let g = BigInt(document.getElementById('g').value);
     let x = BigInt(document.getElementById('x').value);
-    let k = BigInt(document.getElementById('k').value);
+    let k = 0n;
+    if (isEncrypt) {
+        k = BigInt(document.getElementById('k').value);
+    }
 
-    let error = validate(p, g, x, k);
+    let error = validate(p, g, x, k, isEncrypt);
     if (error) return alert(error);
-
     let reader = new FileReader();
 
     reader.onload = async function(e) {
         let bytes = new Uint8Array(e.target.result);
-
         if (isEncrypt) {
             let y = modPow(g, x, p);
             let result = [];
-
             for (let byte of bytes) {
                 let m = BigInt(byte);
+
                 let a = modPow(g, k, p);
                 let b = (modPow(y, k, p) * m) % p;
+
                 result.push(`${a},${b}`);
             }
-
             let text = result.join("\n");
-
             document.getElementById('output').value =
                 `Открытый ключ:
                 p=${p}
                 g=${g}
                 y=${y}
-                Количество первообразных корней: ${currentRoots.length}
-                Зашифрованные данные:
-                ${text.slice(0, 300)}...`;
+                Количество первообразных корней: ${currentRoots.length}`;
             await saveFile(new Blob([text]), "enc_" + file.name);
-
         } else {
+            // 🔥 ВАЖНО: k НЕ используется вообще
             let textReader = new FileReader();
             textReader.onload = function(event) {
                 let text = event.target.result;
                 let lines = text.trim().split("\n");
                 let out = [];
-
                 try {
                     for (let line of lines) {
                         if (!line.includes(',')) continue;
+
                         let [a, b] = line.split(",").map(BigInt);
+
                         let m = (b * modPow(a, p - 1n - x, p)) % p;
                         out.push(Number(m));
                     }
-                    saveFile(new Blob([new Uint8Array(out)]), "dec_" + file.name.replace("enc_", ""));
-                    document.getElementById('output').value = "Файл успешно расшифрован";
+                    saveFile(
+                        new Blob([new Uint8Array(out)]),
+                        "dec_" + file.name.replace("enc_", "")
+                    );
+                    document.getElementById('output').value =
+                        "Файл успешно расшифрован";
                 } catch (e) {
-                    alert("Ошибка при разборе зашифрованного файла. Проверьте формат.");
+                    alert("Ошибка формата файла");
                 }
             };
             textReader.readAsText(file);
         }
     };
-
     reader.readAsArrayBuffer(file);
 }
+
 
 
 function getNextPrime(n) {
