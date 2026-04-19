@@ -133,10 +133,12 @@ function processFile(isEncrypt) {
                 p=${p}
                 g=${g}
                 y=${y}
-                Количество первообразных корней: ${currentRoots.length}`;
+                Количество первообразных корней: ${currentRoots.length}
+                Зашифрованные данные (пары a, b):
+                ${text}\`;
+                `;
             await saveFile(new Blob([text]), "enc_" + file.name);
         } else {
-            // 🔥 ВАЖНО: k НЕ используется вообще
             let textReader = new FileReader();
             textReader.onload = function(event) {
                 let text = event.target.result;
