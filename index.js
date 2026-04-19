@@ -220,6 +220,12 @@ document.getElementById('findRootsBtn').onclick = () => {
 
     let p = BigInt(pInput);
 
+    if (p <= 255n) {
+        countDisplay.textContent = "Ошибка: p должно быть > 255";
+        countDisplay.style.color = "#ff4c4c"; // Красный
+        return false;
+    }
+
     if (!isPrime(p)) {
         countDisplay.textContent = "Число не простое!";
         countDisplay.style.color = "#ff4c4c";
